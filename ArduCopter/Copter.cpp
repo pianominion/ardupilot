@@ -573,7 +573,7 @@ void Copter::read_AHRS(void)
 #endif
 
     // we tell AHRS to skip INS update as we have already done it in fast_loop()
-    ahrs.update(true);
+    ahrs.update(true);       
 }
 
 // read baro and log control tuning
