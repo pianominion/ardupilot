@@ -67,7 +67,7 @@
 #include <AP_TempCalibration/AP_TempCalibration.h>
 #include <AC_AutoTune/AC_AutoTune.h>
 #include <AP_Common/AP_FWVersion.h>
-
+#include <AP_OpenMV/AP_OpenMV.h>
 // Configuration
 #include "defines.h"
 #include "config.h"
@@ -323,6 +323,8 @@ private:
     NavEKF3 EKF3{&ahrs, rangefinder};
     AP_AHRS_NavEKF ahrs{EKF2, EKF3, AP_AHRS_NavEKF::FLAG_ALWAYS_USE_EKF};
     AP_AHRS_View *ahrs_view;
+
+    AP_OpenMV openmv{};
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     SITL::SITL sitl;
@@ -671,7 +673,7 @@ private:
     void update_super_simple_bearing(bool force_update);
     void read_AHRS(void);
     void update_altitude();
-
+    void update_OpenMV(void);
     // Attitude.cpp
     float get_pilot_desired_yaw_rate(int16_t stick_angle);
     void update_throttle_hover();
@@ -682,7 +684,6 @@ private:
     void set_accel_throttle_I_from_pilot_throttle();
     void rotate_body_frame_to_NE(float &x, float &y);
     uint16_t get_pilot_speed_dn();
-
 #if ADSB_ENABLED == ENABLED
     // avoidance_adsb.cpp
     void avoidance_adsb_update(void);
