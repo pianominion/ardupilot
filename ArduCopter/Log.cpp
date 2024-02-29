@@ -66,6 +66,24 @@ void Copter::Log_Write_Control_Tuning()
     logger.WriteBlock(&pkt, sizeof(pkt));
 }
 
+struct PACKED log_OpenMV{
+    LOG_PACKET_HEADER;
+    uint64_t time_us;
+    uint8_t cx;
+    uint8_t cy;
+};
+
+//write an OpenMV packet
+void Copter::Log_Write_OpenMV(){
+    struct log_OpenMV pkt = {
+        LOG_PACKET_HEADER_INIT(LOG_OPENMV_MSG),
+        time_us             : AP_HAL::micros64(),
+        cx                  : openmv.cx,
+        cy                  : openmv.cy
+    };
+    logger.WriteBlock(&pkt,sizeof(pkt));
+}
+
 // Write an attitude packet
 void Copter::Log_Write_Attitude()
 {
@@ -483,6 +501,8 @@ const struct LogStructure Copter::log_structure[] = {
     { LOG_PRECLAND_MSG, sizeof(log_Precland),
       "PL",    "QBBfffffffIIB",    "TimeUS,Heal,TAcq,pX,pY,vX,vY,mX,mY,mZ,LastMeasMS,EKFOutl,Est", "s--mmnnmmms--","F--BBBBBBBC--" },
 #endif
+    { LOG_OPENMV_MSG, sizeof(log_OpenMV),
+    "OMV","QBB","TimeUS,cx,cy","s--", "F--"},
     { LOG_SYSIDD_MSG, sizeof(log_SysIdD),
       "SIDD", "Qfffffffff",  "TimeUS,Time,Targ,F,Gx,Gy,Gz,Ax,Ay,Az", "ss-zkkkooo", "F---------" },
     { LOG_SYSIDS_MSG, sizeof(log_SysIdS),

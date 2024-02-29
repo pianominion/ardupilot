@@ -589,7 +589,9 @@ void Copter::update_altitude()
 }
 void Copter::update_OpenMV(void)
 {
-    openmv.update();
+    if(openmv.update()){
+        Log_Write_OpenMV();
+    }
 }
 
 #if OSD_ENABLED == ENABLED
